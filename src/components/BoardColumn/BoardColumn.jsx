@@ -18,17 +18,17 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 
 	const onDragEnd = result => {
 		const { source, destination } = result;
-		if (!destination) {
+
+		// Проверьте, что есть начальный и конечный индексы, и что цель не равна источнику
+		if (
+			!destination ||
+			(source.droppableId === destination.droppableId &&
+				source.index === destination.index)
+		) {
 			return;
 		}
 
-		console.log(`OnDragEnd: BoardId: ${boardId},
-			Source.droppableId: ${source.droppableId},
-			Column: ${destination.droppableId},
-			Source.index: ${source.index},
-			Destination.index: ${destination.index}
-		`);
-
+		// Вызовите action для перемещения карточки
 		onMoveCard(
 			boardId,
 			source.droppableId,
@@ -39,8 +39,8 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 	};
 
 	return (
-		<DragDropContext onDragEnd={onDragEnd}>
-			<Droppable droppableId={column}>
+		<>
+			<Droppable droppableId={`column-${column}`} type='CARD'>
 				{(provided, snapshot) => (
 					<div
 						ref={provided.innerRef}
@@ -98,7 +98,7 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 				onChange={e => setNewCardTitle(e.target.value)}
 				value={newCardTitle}
 			/>
-		</DragDropContext>
+		</>
 	);
 };
 
