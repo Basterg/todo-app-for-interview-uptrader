@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { addCard, moveCard } from '../../boardActions';
 import CardModal from '../CardModal/CardModal';
+import './BoardColumn.sass';
+import AddCardButton from '../AddCardButton/AddCardButton';
+import Card from '../Card/Card';
 
-const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
+const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 	const [isModalOpen, setModalOpen] = useState(false);
 	const [newCardTitle, setNewCardTitle] = useState('');
 
@@ -16,42 +19,17 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 		}
 	};
 
-	const onDragEnd = result => {
-		const { source, destination } = result;
-
-		// Проверьте, что есть начальный и конечный индексы, и что цель не равна источнику
-		if (
-			!destination ||
-			(source.droppableId === destination.droppableId &&
-				source.index === destination.index)
-		) {
-			return;
-		}
-
-		// Вызовите action для перемещения карточки
-		onMoveCard(
-			boardId,
-			source.droppableId,
-			destination.droppableId,
-			source.index,
-			destination.index
-		);
-	};
-
 	return (
-		<>
+		<div className='column-container'>
+			<h3 className='column-header'>{column}</h3>
 			<Droppable droppableId={`column-${column}`} type='CARD'>
 				{(provided, snapshot) => (
 					<div
 						ref={provided.innerRef}
-						{...provided.droppableProps}
-						style={{
-							background: snapshot.isDraggingOver ? 'lightblue' : 'lightgrey',
-							padding: '10px',
-							width: '300px' // Изменяем ширину колонки по желанию
-						}}
+						className={`${
+							snapshot.isDraggingOver ? 'dragging-over' : 'default-class'
+						} droppable-container`}
 					>
-						<h3>{column}</h3>
 						{cards.map((card, index) => (
 							<Draggable key={card.id} draggableId={card.id} index={index}>
 								{(provided, snapshot) => (
@@ -59,17 +37,11 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 										ref={provided.innerRef}
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
-										style={{
-											userSelect: 'none',
-											padding: '16px',
-											margin: '0 0 8px 0',
-											minHeight: '50px',
-											background: snapshot.isDragging ? '#263B4A' : '#456C86',
-											color: 'white',
-											...provided.draggableProps.style
-										}}
+										className={`card-container ${
+											snapshot.isDragging ? 'dragging' : ''
+										}`}
 									>
-										{card.title}
+										<Card card={card} className='card' />
 									</div>
 								)}
 							</Draggable>
@@ -78,19 +50,8 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 					</div>
 				)}
 			</Droppable>
-			<button
-				onClick={() => setModalOpen(true)}
-				style={{
-					background: '#007bff', // Цвет фона кнопки
-					color: 'white', // Цвет текста кнопки
-					border: 'none', // Убираем границу кнопки
-					padding: '10px 20px', // Поля кнопки
-					borderRadius: '5px', // Скругление углов кнопки
-					cursor: 'pointer' // Указываем, что это интерактивный элемент
-				}}
-			>
-				Добавить карточку в колонку
-			</button>
+			<AddCardButton onClick={() => setModalOpen(true)} />
+
 			<CardModal
 				isOpen={isModalOpen}
 				onClose={() => setModalOpen(false)}
@@ -98,7 +59,7 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 				onChange={e => setNewCardTitle(e.target.value)}
 				value={newCardTitle}
 			/>
-		</>
+		</div>
 	);
 };
 

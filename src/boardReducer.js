@@ -17,10 +17,6 @@ const generateUniqueName = (boards, name) => {
 	return uniqueName;
 };
 
-const generateUniqueId = () => {
-	return `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-};
-
 const initialState = {
 	boards: [
 		{
@@ -72,7 +68,7 @@ const boardReducer = (state = initialState, action) => {
 				...state,
 				boards: updatedBoardsAddCard
 			};
-		case MOVE_CARD:
+		case 'MOVE_CARD':
 			const {
 				sourceBoardId,
 				sourceColumn,
@@ -81,50 +77,26 @@ const boardReducer = (state = initialState, action) => {
 				destinationIndex
 			} = action.payload;
 
-			const sourceBoard = state.boards.find(
-				board => board.id === sourceBoardId
+			const board = state.boards.find(board => board.id === sourceBoardId);
+
+			var sourceColumnName = sourceColumn.split('-')[1];
+
+			const movedCard = board.columns[sourceColumnName].splice(
+				sourceIndex,
+				1
+			)[0];
+
+			var destinationColumnName = destinationColumn.split('-')[1];
+
+			board.columns[destinationColumnName].splice(
+				destinationIndex,
+				0,
+				movedCard
 			);
-
-			if (!sourceBoard || !sourceBoard.columns[sourceColumn]) {
-				return state;
-			}
-
-			const sourceColumnCards = [...sourceBoard.columns[sourceColumn]];
-			const movedCard = sourceColumnCards[sourceIndex];
-
-			// Удаляем карточку из исходной колонки
-			sourceColumnCards.splice(sourceIndex, 1);
-
-			// Вставляем карточку в целевую колонку на указанную позицию
-			sourceColumnCards.splice(destinationIndex, 0, movedCard);
-
-			const updatedColumns = {
-				...sourceBoard.columns,
-				[sourceColumn]: sourceColumnCards
-			};
-
-			if (sourceColumn !== destinationColumn) {
-				// Если карточка перемещается между колонками, удаляем ее из исходной колонки
-				const destinationColumnCards = [
-					...sourceBoard.columns[destinationColumn]
-				];
-				destinationColumnCards.splice(destinationIndex, 0, movedCard);
-				updatedColumns[destinationColumn] = destinationColumnCards;
-			}
-
-			const updatedBoardsMoveCard = state.boards.map(board => {
-				if (board.id === sourceBoardId) {
-					return {
-						...board,
-						columns: updatedColumns
-					};
-				}
-				return board;
-			});
 
 			return {
 				...state,
-				boards: updatedBoardsMoveCard
+				boards: state.boards.map(b => (b.id === sourceBoardId ? board : b))
 			};
 
 		default:

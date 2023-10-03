@@ -5,7 +5,7 @@ import BoardColumn from '../../components/BoardColumn/BoardColumn';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { moveCard } from '../../boardActions';
 
-const Board = ({ boards, dispatch }) => {
+const Board = ({ boards, onMoveCard }) => {
 	const { id } = useParams();
 	const board = boards.find(b => b.id.toString() === id);
 	console.log(board.id);
@@ -22,14 +22,12 @@ const Board = ({ boards, dispatch }) => {
 			return;
 		}
 
-		dispatch(
-			moveCard(
-				board.id,
-				source.droppableId,
-				destination.droppableId,
-				source.index,
-				destination.index
-			)
+		onMoveCard(
+			board.id,
+			source.droppableId,
+			destination.droppableId,
+			source.index,
+			destination.index
 		);
 	};
 
@@ -58,4 +56,26 @@ const mapStateToProps = state => {
 	};
 };
 
-export default connect(mapStateToProps)(Board);
+const mapDispatchToProps = dispatch => {
+	return {
+		onMoveCard: (
+			sourceBoardId,
+			sourceColumn,
+			destinationColumn,
+			sourceIndex,
+			destinationIndex
+		) => {
+			dispatch(
+				moveCard(
+					sourceBoardId,
+					sourceColumn,
+					destinationColumn,
+					sourceIndex,
+					destinationIndex
+				)
+			);
+		}
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

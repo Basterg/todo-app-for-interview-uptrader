@@ -1,15 +1,9 @@
+import './Card.sass';
 import React from 'react';
 
-const Card = React.memo(({ card }) => {
-	console.log(card); // Этот лог будет выводиться только при изменении пропсов
+const Card = React.memo(({ card, className }) => {
 	return (
-		<div
-			style={{
-				border: '1px solid #ccc',
-				padding: '10px',
-				marginBottom: '10px'
-			}}
-		>
+		<div className={`card ${className}`}>
 			{typeof card.title === 'string' ? card.title : ''}
 		</div>
 	);
