@@ -1,4 +1,3 @@
-// boardActions.js
 export const ADD_CARD = 'ADD_CARD';
 
 const generateUniqueId = () => {
@@ -12,16 +11,39 @@ export const addCard = (boardId, column, title) => {
 			boardId,
 			column,
 			card: {
-				id: generateUniqueId(), // Генерация уникального идентификатора для карточки
+				id: generateUniqueId(),
 				title
 			}
 		}
 	};
 };
 
+export const ADD_BOARD = 'ADD_BOARD';
+
 export const addBoard = board => {
 	return {
-		type: 'ADD_BOARD',
+		type: ADD_BOARD,
 		board
+	};
+};
+
+export const MOVE_CARD = 'MOVE_CARD';
+
+export const moveCard = (
+	sourceBoardId,
+	sourceColumn,
+	destinationColumn,
+	sourceIndex,
+	destinationIndex
+) => {
+	return {
+		type: MOVE_CARD,
+		payload: {
+			sourceBoardId,
+			sourceColumn,
+			destinationColumn,
+			sourceIndex,
+			destinationIndex
+		}
 	};
 };

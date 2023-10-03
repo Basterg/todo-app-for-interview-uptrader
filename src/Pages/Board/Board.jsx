@@ -1,11 +1,12 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom'; // Импортируйте компонент Link
+import { useParams, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import BoardColumn from '../../components/BoardColumn/BoardColumn';
 
 const Board = ({ boards }) => {
 	const { id } = useParams();
 	const board = boards.find(b => b.id.toString() === id);
+	console.log(board.id);
 
 	if (!board) {
 		return <div>Доска не найдена</div>;
