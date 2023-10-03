@@ -81,7 +81,6 @@ const boardReducer = (state = initialState, action) => {
 				destinationIndex
 			} = action.payload;
 
-			// Находим исходную и целевую колонки в исходной доске
 			const sourceBoard = state.boards.find(
 				board => board.id === sourceBoardId
 			);
@@ -90,47 +89,19 @@ const boardReducer = (state = initialState, action) => {
 				return state;
 			}
 
-			// Создаем копии карточек из исходной и целевой колонок
 			const sourceColumnCards = [...sourceBoard.columns[sourceColumn]];
 			const movedCard = sourceColumnCards[sourceIndex];
-
-			if (!movedCard) {
-				return state;
-			}
 
 			// Удаляем карточку из исходной колонки
 			sourceColumnCards.splice(sourceIndex, 1);
 
-			// Копируем целевую колонку
-			const destinationColumnCards = [
-				...sourceBoard.columns[destinationColumn]
-			];
-
 			// Вставляем карточку в целевую колонку на указанную позицию
-			destinationColumnCards.splice(destinationIndex, 0, movedCard);
+			sourceColumnCards.splice(destinationIndex, 0, movedCard);
 
-			// // Обновляем состояние доски
-			// const updatedColumns = {
-			// 	...sourceBoard.columns,
-			// 	[sourceColumn]: sourceColumnCards,
-			// 	[destinationColumn]: destinationColumnCards
-			// };
-
-			let updatedColumns = {
+			const updatedColumns = {
 				...sourceBoard.columns,
 				[sourceColumn]: sourceColumnCards
 			};
-
-			if (sourceColumn !== destinationColumn) {
-				updatedColumns = {
-					...updatedColumns,
-					[destinationColumn]: [
-						...updatedColumns[destinationColumn],
-						{ id: generateUniqueId(), title: movedCard.title }
-					]
-				};
-			}
-
 			console.log('AAAAA', updatedColumns);
 
 			const updatedBoardsMoveCard = state.boards.map(board => {
