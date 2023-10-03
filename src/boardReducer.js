@@ -102,7 +102,15 @@ const boardReducer = (state = initialState, action) => {
 				...sourceBoard.columns,
 				[sourceColumn]: sourceColumnCards
 			};
-			console.log('AAAAA', updatedColumns);
+
+			if (sourceColumn !== destinationColumn) {
+				// Если карточка перемещается между колонками, удаляем ее из исходной колонки
+				const destinationColumnCards = [
+					...sourceBoard.columns[destinationColumn]
+				];
+				destinationColumnCards.splice(destinationIndex, 0, movedCard);
+				updatedColumns[destinationColumn] = destinationColumnCards;
+			}
 
 			const updatedBoardsMoveCard = state.boards.map(board => {
 				if (board.id === sourceBoardId) {

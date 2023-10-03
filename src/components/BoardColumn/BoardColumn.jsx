@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { addCard, moveCard } from '../../boardActions'; // Добавьте moveCard в ваши actions
+import { addCard, moveCard } from '../../boardActions';
 import CardModal from '../CardModal/CardModal';
 
 const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
@@ -23,11 +23,12 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 		}
 
 		console.log(`OnDragEnd: BoardId: ${boardId},
-		Source.droppableId: ${source.droppableId},
-		Column: ${destination.droppableId},
-		Source.index: ${source.index},
-		Destination.index: ${destination.index}
+			Source.droppableId: ${source.droppableId},
+			Column: ${destination.droppableId},
+			Source.index: ${source.index},
+			Destination.index: ${destination.index}
 		`);
+
 		onMoveCard(
 			boardId,
 			source.droppableId,
@@ -41,7 +42,15 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 		<DragDropContext onDragEnd={onDragEnd}>
 			<Droppable droppableId={column}>
 				{(provided, snapshot) => (
-					<div ref={provided.innerRef} {...provided.droppableProps}>
+					<div
+						ref={provided.innerRef}
+						{...provided.droppableProps}
+						style={{
+							background: snapshot.isDraggingOver ? 'lightblue' : 'lightgrey',
+							padding: '10px',
+							width: '300px' // Изменяем ширину колонки по желанию
+						}}
+					>
 						<h3>{column}</h3>
 						{cards.map((card, index) => (
 							<Draggable key={card.id} draggableId={card.id} index={index}>
@@ -50,6 +59,15 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 										ref={provided.innerRef}
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
+										style={{
+											userSelect: 'none',
+											padding: '16px',
+											margin: '0 0 8px 0',
+											minHeight: '50px',
+											background: snapshot.isDragging ? '#263B4A' : '#456C86',
+											color: 'white',
+											...provided.draggableProps.style
+										}}
 									>
 										{card.title}
 									</div>
@@ -60,7 +78,17 @@ const BoardColumn = ({ boardId, column, cards, onAddCard, onMoveCard }) => {
 					</div>
 				)}
 			</Droppable>
-			<button onClick={() => setModalOpen(true)}>
+			<button
+				onClick={() => setModalOpen(true)}
+				style={{
+					background: '#007bff', // Цвет фона кнопки
+					color: 'white', // Цвет текста кнопки
+					border: 'none', // Убираем границу кнопки
+					padding: '10px 20px', // Поля кнопки
+					borderRadius: '5px', // Скругление углов кнопки
+					cursor: 'pointer' // Указываем, что это интерактивный элемент
+				}}
+			>
 				Добавить карточку в колонку
 			</button>
 			<CardModal
