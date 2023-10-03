@@ -21,37 +21,38 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 
 	return (
 		<div className='column-container'>
-			<h3 className='column-header'>{column}</h3>
-			<Droppable droppableId={`column-${column}`} type='CARD'>
-				{(provided, snapshot) => (
-					<div
-						ref={provided.innerRef}
-						className={`${
-							snapshot.isDraggingOver ? 'dragging-over' : 'default-class'
-						} droppable-container`}
-					>
-						{cards.map((card, index) => (
-							<Draggable key={card.id} draggableId={card.id} index={index}>
-								{(provided, snapshot) => (
-									<div
-										ref={provided.innerRef}
-										{...provided.draggableProps}
-										{...provided.dragHandleProps}
-										className={`card-container ${
-											snapshot.isDragging ? 'dragging' : ''
-										}`}
-									>
-										<Card card={card} className='card' />
-									</div>
-								)}
-							</Draggable>
-						))}
-						{provided.placeholder}
-					</div>
-				)}
-			</Droppable>
-			<AddCardButton onClick={() => setModalOpen(true)} />
-
+			<div className='column'>
+				<h3 className='column-header'>{column}</h3>
+				<Droppable droppableId={`column-${column}`} type='CARD'>
+					{(provided, snapshot) => (
+						<div
+							ref={provided.innerRef}
+							className={`${
+								snapshot.isDraggingOver ? 'dragging-over' : 'default-class'
+							} droppable-container`}
+						>
+							{cards.map((card, index) => (
+								<Draggable key={card.id} draggableId={card.id} index={index}>
+									{(provided, snapshot) => (
+										<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											className={`card-container ${
+												snapshot.isDragging ? 'dragging' : ''
+											}`}
+										>
+											<Card card={card} className='card' />
+										</div>
+									)}
+								</Draggable>
+							))}
+							{provided.placeholder}
+						</div>
+					)}
+				</Droppable>
+				<AddCardButton onClick={() => setModalOpen(true)} />
+			</div>
 			<CardModal
 				isOpen={isModalOpen}
 				onClose={() => setModalOpen(false)}

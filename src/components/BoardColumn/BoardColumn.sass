@@ -1,17 +1,25 @@
 .column-container
-  background: lightgrey
   padding: 8px
   width: 100%
   display: flex
   flex-wrap: wrap
   justify-content: center
-  min-width: 10px // Установите минимальную ширину области, чтобы избежать узких колонок
-  max-width: 300px // Установите максимальную ширину для больших экранов
+  min-width: 10px
+  max-width: 300px
 
   @media screen and (min-width: 768px)
     width: 50px
     flex-grow: 1
-    max-width: none// Убедитесь, что максимальная ширина сброшена на больших экранах
+    max-width: none
+
+.column
+  background: lightgrey
+  margin: 0 8px 0 8px
+  padding: 16px
+  flex: 1
+  display: flex
+  flex-direction: column
+  align-items: center
 
 .column-header
   font-size: 1.2rem
@@ -19,6 +27,12 @@
 
 .dragging-over
   background: lightblue
+
+.droppable-container
+  width: 100%
+  min-width: 50px
+  max-width: 300px
+  padding: 8px
 
 .card-container
   user-select: none
@@ -30,9 +44,3 @@
 
   @media screen and (min-width: 768px)
     min-height: 30px
-
-.droppable-container
-  width: 100% 
-  min-width: 50px
-  max-width: 300px// Установите максимальную ширину для Droppable контейнера на больших экранах
-
