@@ -8,12 +8,14 @@ import AddCardButton from '../AddCardButton/AddCardButton';
 import Card from '../Card/Card';
 
 const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
+	console.log('BoardColumn rerender');
 	const [isModalOpen, setModalOpen] = useState(false);
 	const [newCardTitle, setNewCardTitle] = useState('');
 
 	const handleModalSubmit = newCardTitle => {
 		if (newCardTitle) {
-			onAddCard(boardId, column.toLowerCase(), newCardTitle);
+			const createdAt = new Date();
+			onAddCard(boardId, column.toLowerCase(), newCardTitle, createdAt);
 			setNewCardTitle('');
 			setModalOpen(false);
 		}
@@ -26,7 +28,7 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 				<Droppable
 					droppableId={`column-${column}`}
 					type='CARD'
-					transitionDuration={1000}
+					transitionDuration={200}
 				>
 					{(provided, snapshot) => (
 						<div
@@ -41,12 +43,14 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 										<div
 											ref={provided.innerRef}
 											{...provided.draggableProps}
-											{...provided.dragHandleProps}
 											className={`card-container ${
 												snapshot.isDragging ? 'dragging' : ''
 											}`}
 										>
-											<Card card={card} className='card' />
+											<div {...provided.dragHandleProps}>
+												{console.log('Пофиксить ререндер', card)}
+												<Card card={card} className='card' />
+											</div>
 										</div>
 									)}
 								</Draggable>
@@ -70,9 +74,11 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onAddCard: (boardId, column, card) => {
+		onAddCard: (boardId, column, cardTitle, createdAt) => {
 			console.log('Adding card to boardId:', boardId);
-			dispatch(addCard(boardId, column, card));
+			dispatch(
+				addCard(boardId, column, { title: cardTitle, createdAt: createdAt })
+			);
 		},
 		onMoveCard: (
 			sourceBoardId,

@@ -1,4 +1,52 @@
 .card
-  border: '1px solid #ccc',
-  padding: '10px',
-  marginBottom: '10px'
+  border: none
+  // border: 1px solid #ccc
+  margin-bottom: 10px
+  position: relative
+  width: 100%
+  
+.card-content
+  display: flex
+  justify-content: space-between
+
+.info 
+  h2
+    margin: 0
+    font-size: 0.8em
+    white-space: pre-line
+    overflow: hidden
+    text-overflow: ellipsis
+    max-width: 250px
+    max-height: 4em 
+    overflow-wrap: break-word
+  p
+    margin: 0
+    font-size: 0.8em
+    white-space: pre-line
+    overflow: hidden
+    text-overflow: ellipsis
+    max-width: 250px
+    max-height: 4em 
+    overflow-wrap: break-word
+
+.open-button
+  background-color: #007bff
+  color: white
+  border: none
+  cursor: pointer
+  position: absolute
+  bottom: 0
+  right: 0
+  font-size: 1em
+  padding: 5px 10px
+
+@media screen and (max-width: 767px)
+  .info h2, .info p
+    font-size: 0.6em
+    max-width: 50px
+    max-height: 1em 
+  .open-button
+    font-size: 0.3em
+    padding: 2px 4px
+
+

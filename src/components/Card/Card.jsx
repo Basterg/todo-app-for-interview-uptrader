@@ -1,15 +1,35 @@
-import './Card.sass';
 import React, { useState } from 'react';
+import moment from 'moment';
+import 'moment/locale/ru';
+import OpenCardModal from '../OpenCardModal/OpenCardModal';
+import './Card.sass';
 
 const Card = React.memo(({ card, className }) => {
-	const [createdAt] = useState(new Date()); // Используем хук useState для хранения даты создания
+	console.log('Card rendering');
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	};
+
+	const formattedDate = moment(card.createdAt).format('YY.MM.DD');
 
 	return (
 		<div className={`card ${className}`}>
-			<p>{card.title}</p>
-			{/* Отображение других свойств задачи */}
-			<p>Создано: {createdAt.toLocaleString()}</p>{' '}
-			{/* Отображение даты создания */}
+			<div className='card-content'>
+				<div className='info'>
+					<p>{card.title}</p>
+					<p>{formattedDate}</p>
+				</div>
+				<button className='open-button' onClick={openModal}>
+					Open Card
+				</button>
+			</div>
+			{isModalOpen && <OpenCardModal card={card} closeModal={closeModal} />}
 		</div>
 	);
 });

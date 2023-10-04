@@ -7,6 +7,7 @@ import { moveCard } from '../../boardActions';
 import './Board.sass';
 
 const Board = ({ boards, onMoveCard }) => {
+	console.log('Board rerender');
 	const { id } = useParams();
 	const board = boards.find(b => b.id.toString() === id);
 
@@ -32,10 +33,10 @@ const Board = ({ boards, onMoveCard }) => {
 	};
 
 	return (
-		<div className='board'>
-			<h2>{board.name}</h2>
+		<>
+			{/* <h2>{board.name}</h2> */}
 			<DragDropContext onDragEnd={onDragEnd}>
-				<div style={{ display: 'flex' }}>
+				<div className='board'>
 					<BoardColumn boardId={board.id} column='Queue' cards={queue} />
 					<BoardColumn
 						boardId={board.id}
@@ -45,8 +46,8 @@ const Board = ({ boards, onMoveCard }) => {
 					<BoardColumn boardId={board.id} column='Done' cards={done} />
 				</div>
 			</DragDropContext>
-			<Link to='/'>Назад к бордам</Link>
-		</div>
+			{/* <Link to='/'>Назад к бордам</Link> */}
+		</>
 	);
 };
 
