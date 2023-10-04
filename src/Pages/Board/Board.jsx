@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import BoardColumn from '../../components/BoardColumn/BoardColumn';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { moveCard } from '../../boardActions';
+import './Board.sass';
 
 const Board = ({ boards, onMoveCard }) => {
 	const { id } = useParams();
 	const board = boards.find(b => b.id.toString() === id);
-	console.log(board.id);
 
 	if (!board) {
 		return <div>Доска не найдена</div>;
@@ -32,17 +32,17 @@ const Board = ({ boards, onMoveCard }) => {
 	};
 
 	return (
-		<div>
+		<div className='board'>
 			<h2>{board.name}</h2>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<div style={{ display: 'flex' }}>
-					<BoardColumn boardId={board.id} column='queue' cards={queue} />
+					<BoardColumn boardId={board.id} column='Queue' cards={queue} />
 					<BoardColumn
 						boardId={board.id}
-						column='development'
+						column='Development'
 						cards={development}
 					/>
-					<BoardColumn boardId={board.id} column='done' cards={done} />
+					<BoardColumn boardId={board.id} column='Done' cards={done} />
 				</div>
 			</DragDropContext>
 			<Link to='/'>Назад к бордам</Link>

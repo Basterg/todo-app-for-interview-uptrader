@@ -1,10 +1,15 @@
 import './Card.sass';
-import React from 'react';
+import React, { useState } from 'react';
 
 const Card = React.memo(({ card, className }) => {
+	const [createdAt] = useState(new Date()); // Используем хук useState для хранения даты создания
+
 	return (
 		<div className={`card ${className}`}>
-			{typeof card.title === 'string' ? card.title : ''}
+			<p>{card.title}</p>
+			{/* Отображение других свойств задачи */}
+			<p>Создано: {createdAt.toLocaleString()}</p>{' '}
+			{/* Отображение даты создания */}
 		</div>
 	);
 });

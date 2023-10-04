@@ -13,7 +13,7 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 
 	const handleModalSubmit = newCardTitle => {
 		if (newCardTitle) {
-			onAddCard(boardId, column, newCardTitle);
+			onAddCard(boardId, column.toLowerCase(), newCardTitle);
 			setNewCardTitle('');
 			setModalOpen(false);
 		}
@@ -23,12 +23,16 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 		<div className='column-container'>
 			<div className='column'>
 				<h3 className='column-header'>{column}</h3>
-				<Droppable droppableId={`column-${column}`} type='CARD'>
+				<Droppable
+					droppableId={`column-${column}`}
+					type='CARD'
+					transitionDuration={1000}
+				>
 					{(provided, snapshot) => (
 						<div
 							ref={provided.innerRef}
 							className={`${
-								snapshot.isDraggingOver ? 'dragging-over' : 'default-class'
+								snapshot.isDraggingOver ? 'dragging-over' : ''
 							} droppable-container`}
 						>
 							{cards.map((card, index) => (

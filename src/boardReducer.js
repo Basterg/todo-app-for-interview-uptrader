@@ -68,7 +68,7 @@ const boardReducer = (state = initialState, action) => {
 				...state,
 				boards: updatedBoardsAddCard
 			};
-		case 'MOVE_CARD':
+		case MOVE_CARD:
 			const {
 				sourceBoardId,
 				sourceColumn,
@@ -80,15 +80,20 @@ const boardReducer = (state = initialState, action) => {
 			const board = state.boards.find(board => board.id === sourceBoardId);
 
 			var sourceColumnName = sourceColumn.split('-')[1];
+			var sourceColumnNameToLowerCase =
+				sourceColumnName.charAt(0).toLowerCase() + sourceColumnName.slice(1);
 
-			const movedCard = board.columns[sourceColumnName].splice(
+			const movedCard = board.columns[sourceColumnNameToLowerCase].splice(
 				sourceIndex,
 				1
 			)[0];
 
 			var destinationColumnName = destinationColumn.split('-')[1];
+			var destinationColumnNameLowerCase =
+				destinationColumnName.charAt(0).toLowerCase() +
+				destinationColumnName.slice(1);
 
-			board.columns[destinationColumnName].splice(
+			board.columns[destinationColumnNameLowerCase].splice(
 				destinationIndex,
 				0,
 				movedCard
