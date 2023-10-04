@@ -48,7 +48,6 @@ const BoardColumn = ({ boardId, column, cards, onAddCard }) => {
 											}`}
 										>
 											<div {...provided.dragHandleProps}>
-												{console.log('Пофиксить ререндер', card)}
 												<Card card={card} className='card' />
 											</div>
 										</div>

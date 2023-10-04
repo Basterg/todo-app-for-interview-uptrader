@@ -2,7 +2,8 @@ import {
 	ADD_CARD,
 	MOVE_CARD,
 	ADD_BOARD,
-	EDIT_CARD_DESCRIPTION
+	EDIT_CARD_DESCRIPTION,
+	ADD_COMMENT
 } from './boardActions';
 
 const generateUniqueName = (boards, name) => {
@@ -101,6 +102,36 @@ const boardReducer = (state = initialState, action) => {
 				boards: updatedBoardsEditCard
 			};
 		}
+		case ADD_COMMENT:
+			const { cardId, comment } = action.payload;
+			const updatedBoards = state.boards.map(board => {
+				const updatedColumns = Object.keys(board.columns).reduce(
+					(acc, columnKey) => {
+						const updatedCards = board.columns[columnKey].map(card => {
+							if (card.id === cardId) {
+								return {
+									...card,
+									comments: [...card.comments, comment]
+								};
+							}
+							return card;
+						});
+						return {
+							...acc,
+							[columnKey]: updatedCards
+						};
+					},
+					{}
+				);
+				return {
+					...board,
+					columns: updatedColumns
+				};
+			});
+			return {
+				...state,
+				boards: updatedBoards
+			};
 
 		case MOVE_CARD:
 			const {

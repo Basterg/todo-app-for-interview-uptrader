@@ -2,9 +2,24 @@ export const ADD_CARD = 'ADD_CARD';
 export const ADD_BOARD = 'ADD_BOARD';
 export const MOVE_CARD = 'MOVE_CARD';
 export const EDIT_CARD_DESCRIPTION = 'EDIT_CARD_DESCRIPTION';
+export const ADD_COMMENT = 'ADD_COMMENT';
 
 const generateUniqueId = () => {
 	return '_' + Math.random().toString(36).substr(2, 9);
+};
+
+export const addComment = (cardId, text) => {
+	return {
+		type: ADD_COMMENT,
+		payload: {
+			cardId,
+			comment: {
+				id: generateUniqueId(), // функция generateUniqueId должна быть определена
+				text,
+				createdAt: new Date()
+			}
+		}
+	};
 };
 
 export const editCardDescription = (
@@ -35,6 +50,7 @@ export const addCard = (boardId, column, card) => {
 				title: card.title,
 				createdAt: card.createdAt,
 				description: '',
+				comments: [],
 				boardId: boardId,
 				column: column
 			}
