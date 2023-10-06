@@ -125,10 +125,19 @@ const boardReducer = (state = initialState, action) => {
 					(acc, columnKey) => {
 						const updatedCards = board.columns[columnKey].map(card => {
 							if (card.id === cardId) {
-								return {
-									...card,
-									comments: addCommentToCard(card.comments, parentId, comment)
-								};
+								if (parentId !== null) {
+									// Если parentId не null, добавляем новый комментарий к дочерним комментариям
+									return {
+										...card,
+										comments: addCommentToCard(card.comments, parentId, comment)
+									};
+								} else {
+									// Если parentId null, добавляем новый комментарий к карточке
+									return {
+										...card,
+										comments: [...card.comments, comment]
+									};
+								}
 							}
 							return card;
 						});
