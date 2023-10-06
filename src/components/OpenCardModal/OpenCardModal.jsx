@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './OpenCardModal.sass';
 import { useDispatch } from 'react-redux';
 import { editCardDescription, addComment } from '../../boardActions';
+import Comment from '../Comment/Comment'; // Предполагается, что компонент Comment находится в том же каталоге
 
 const OpenCardModal = ({ card, closeModal }) => {
 	const dispatch = useDispatch();
@@ -11,13 +12,13 @@ const OpenCardModal = ({ card, closeModal }) => {
 
 	const handleSaveDescription = () => {
 		dispatch(
-			editCardDescription(card.boardId, card.column, card.id, editedDescription)
+			editCardDescription(card.id, card.column, card.id, editedDescription) // Используйте card.id для редактирования конкретного комментария
 		);
 	};
 
 	const handleAddComment = () => {
 		if (newComment) {
-			dispatch(addComment(card.id, newComment));
+			dispatch(addComment(card.id, null, newComment, new Date())); // Передаем null в parentId, так как это корневой комментарий
 			setNewComment('');
 		}
 	};
@@ -41,17 +42,16 @@ const OpenCardModal = ({ card, closeModal }) => {
 				)}
 				<h3>Комментарии</h3>
 				{card.comments.map(comment => (
-					<div key={comment.id}>
-						<p>{comment.text}</p>
-						<p>Опубликовано: {comment.createdAt.toLocaleString()}</p>
-					</div>
+					<Comment key={comment.id} comment={comment} cardId={card.id} />
 				))}
-				<input
-					type='text'
-					value={newComment}
-					onChange={e => setNewComment(e.target.value)}
-				/>
-				<button onClick={handleAddComment}>Добавить комментарий</button>
+				<div>
+					<input
+						type='text'
+						value={newComment}
+						onChange={e => setNewComment(e.target.value)}
+					/>
+					<button onClick={handleAddComment}>Добавить комментарий</button>
+				</div>
 				<button onClick={closeModal}>Закрыть</button>
 			</div>
 		</div>

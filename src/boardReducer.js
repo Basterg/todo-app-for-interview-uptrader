@@ -23,6 +23,21 @@ const generateUniqueName = (boards, name) => {
 	return uniqueName;
 };
 
+const findCommentById = (comments, id) => {
+	for (const comment of comments) {
+		if (comment.id === id) {
+			return comment;
+		}
+		if (comment.children.length > 0) {
+			const foundComment = findCommentById(comment.children, id);
+			if (foundComment) {
+				return foundComment;
+			}
+		}
+	}
+	return null;
+};
+
 const initialState = {
 	boards: [
 		{
@@ -102,8 +117,9 @@ const boardReducer = (state = initialState, action) => {
 				boards: updatedBoardsEditCard
 			};
 		}
+
 		case ADD_COMMENT:
-			const { cardId, comment } = action.payload;
+			const { cardId, parentId, comment } = action.payload;
 			const updatedBoards = state.boards.map(board => {
 				const updatedColumns = Object.keys(board.columns).reduce(
 					(acc, columnKey) => {
@@ -111,7 +127,7 @@ const boardReducer = (state = initialState, action) => {
 							if (card.id === cardId) {
 								return {
 									...card,
-									comments: [...card.comments, comment]
+									comments: addCommentToCard(card.comments, parentId, comment)
 								};
 							}
 							return card;
@@ -173,6 +189,25 @@ const boardReducer = (state = initialState, action) => {
 		default:
 			return state;
 	}
+};
+
+const addCommentToCard = (comments, parentId, newComment) => {
+	return comments.map(comment => {
+		if (comment.id === parentId) {
+			// Нашли комментарий с нужным parentId
+			return {
+				...comment,
+				children: [...(comment.children || []), newComment] // Добавляем новый комментарий к дочерним комментариям
+			};
+		} else if (comment.children && comment.children.length > 0) {
+			// Рекурсивно обрабатываем дочерние комментарии
+			return {
+				...comment,
+				children: addCommentToCard(comment.children, parentId, newComment)
+			};
+		}
+		return comment;
+	});
 };
 
 export default boardReducer;

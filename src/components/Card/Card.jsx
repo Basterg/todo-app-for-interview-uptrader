@@ -5,7 +5,6 @@ import OpenCardModal from '../OpenCardModal/OpenCardModal';
 import './Card.sass';
 
 const Card = React.memo(({ card, className }) => {
-	console.log('Card rendering');
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {

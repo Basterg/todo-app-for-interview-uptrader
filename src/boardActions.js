@@ -8,16 +8,20 @@ const generateUniqueId = () => {
 	return '_' + Math.random().toString(36).substr(2, 9);
 };
 
-export const addComment = (cardId, text) => {
+export const addComment = (cardId, parentId, text, createdAt) => {
+	const comment = {
+		id: generateUniqueId(),
+		text,
+		createdAt,
+		children: []
+	};
+
 	return {
 		type: ADD_COMMENT,
 		payload: {
 			cardId,
-			comment: {
-				id: generateUniqueId(), // функция generateUniqueId должна быть определена
-				text,
-				createdAt: new Date()
-			}
+			parentId,
+			comment
 		}
 	};
 };
